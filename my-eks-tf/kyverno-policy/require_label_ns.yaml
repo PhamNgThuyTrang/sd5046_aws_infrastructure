@@ -1,0 +1,27 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-labels
+  annotations:
+    policies.kyverno.io/title: Require labels
+    policies.kyverno.io/category: Best practice
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      Require a app.kubernetes.io/costcentre label
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+  - name: check-for-labels
+    match:
+      resources:
+        kinds:
+        - Namespace
+    validate:
+      message: "The label `app.kubernetes.io/costcentre` is required."
+      pattern:
+        metadata:
+          labels:
+            app.kubernetes.io/costcentre: "?*"
+
