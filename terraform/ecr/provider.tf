@@ -1,6 +1,6 @@
 provider "aws" {
   region  = "us-east-1"
-  profile = "datton.nashtech.saml"
+  profile = "trangphamSD5046"
 }
 
 terraform {
@@ -17,8 +17,7 @@ terraform {
     key            = "ecr.tfstate"
     region         = "us-east-1"
     dynamodb_table = "terraform-boostrap-nashtech-devops"
-    profile        = "datton.nashtech.saml"
+    profile        = "trangphamSD5046"
     encrypt        = true
-    kms_key_id     = "05e421ca-4bbc-4f0f-be49-e53fbb97769c"
   }
 } 

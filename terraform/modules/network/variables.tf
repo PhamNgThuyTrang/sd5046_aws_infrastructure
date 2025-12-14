@@ -1,11 +1,11 @@
 variable "aws-region" {
   description = "AWS region to launch servers."
-  default     = "us-east-2"
+  default     = "us-east-1"
 }
 
 variable "availability-zones" {
   type    = list(string)
-  default = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
+  default = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
 variable "public-subnet-numbers" {

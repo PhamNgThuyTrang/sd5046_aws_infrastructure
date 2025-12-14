@@ -11,7 +11,7 @@ module "eks" {
   cluster_endpoint_public_access  = true
 
   enable_irsa               = true
-  cluster_enabled_log_types = ["audit", "api", "authenticator"]
+  cluster_enabled_log_types = []  # ← Disabled all logs (saves $5-10/mo)
 
   cluster_addons = {
     coredns = {
@@ -80,30 +80,22 @@ module "eks" {
   self_managed_node_groups = {
     one = {
       name         = "mixed-1"
-      max_size     = 3
-      desired_size = 3
+      max_size     = 1              # ← Reduced from 3
+      desired_size = 1              # ← Reduced from 3
 
       use_mixed_instances_policy = true
       bootstrap_extra_args       = "--kubelet-extra-args '--node-labels=mine/group=default'"
       mixed_instances_policy = {
         instances_distribution = {
-          on_demand_base_capacity                  = 1
-          on_demand_percentage_above_base_capacity = 10
+          on_demand_base_capacity                  = 0   # ← 100% spot
+          on_demand_percentage_above_base_capacity = 0   # ← 100% spot
           spot_allocation_strategy                 = "capacity-optimized"
         }
 
         override = [
           {
-            instance_type     = "t3a.micro"
+            instance_type     = "t3a.micro"    # ← Only smallest instance
             weighted_capacity = "1"
-          },
-          {
-            instance_type     = "t3a.medium"
-            weighted_capacity = "2"
-          },
-          {
-            instance_type     = "t3a.large"
-            weighted_capacity = "3"
           },
         ]
       }
@@ -136,7 +128,7 @@ module "eks" {
   # ]
 
   aws_auth_accounts = [
-    "377414509754"
+    "019394553470"
   ]
 
   tags = module.tags_dev.tags

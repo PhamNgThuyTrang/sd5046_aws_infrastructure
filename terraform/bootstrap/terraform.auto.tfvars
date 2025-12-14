@@ -1,4 +1,4 @@
 name        = "boostrap"
-project     = "nashtech-devops"
+project     = "sd5046-aws-infrastructure"
 environment = "mgmt"
-owner       = "datton94"
+owner       = "trangpham"

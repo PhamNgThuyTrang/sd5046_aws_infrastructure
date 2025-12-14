@@ -30,5 +30,5 @@ private-subnet-numbers-staging = {
 }
 
 name         = "network"
-project-name = "nashtech-devops"
-owner        = "datton94"
+project-name = "sd5046-aws-infrastructure"
+owner        = "trangpham"

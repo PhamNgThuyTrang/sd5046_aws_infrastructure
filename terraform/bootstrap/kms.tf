@@ -24,8 +24,7 @@ data "aws_iam_policy_document" "eks_dev_kms_use" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::377414509754:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccessAWS3_bf168735846c80aa",
-        "arn:aws:iam::377414509754:user/dat.nguyen"
+        "arn:aws:iam::019394553470:user/SD5046-AWS-PracticeDevops",
       ]
     }
   }

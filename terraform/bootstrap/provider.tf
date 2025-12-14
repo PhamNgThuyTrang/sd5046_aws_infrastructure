@@ -19,6 +19,5 @@ terraform {
     dynamodb_table = "terraform-boostrap-nashtech-devops"
     profile        = "trangphamSD5046"
     encrypt        = true
-    kms_key_id     = "fff758c9-658d-4a49-98c4-3fabf9b7384d"
   }
 }
