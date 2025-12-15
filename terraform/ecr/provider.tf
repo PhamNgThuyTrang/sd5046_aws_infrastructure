@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 terraform {
-  required_version = "~> 1.3.0"
+  required_version = ">= 1.3.0"
 
   required_providers {
     aws = {
@@ -13,11 +13,12 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "terraform-boostrap-nashtech-devops"
+    bucket         = "terraform-boostrap-sd5046-aws-infrastructure-0002"
     key            = "ecr.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform-boostrap-nashtech-devops"
+    dynamodb_table = "terraform-boostrap-sd5046-aws-infrastructure"
     profile        = "trangphamSD5046"
     encrypt        = true
+    kms_key_id     = "36567f5c-4c73-4639-9650-273b82016f02"
   }
 } 

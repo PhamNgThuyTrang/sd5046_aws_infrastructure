@@ -2,7 +2,7 @@ module "eks" {
   source  = "../modules/eks"
 
   cluster_name    = "${var.name}-${var.environment}"
-  cluster_version = "1.26"
+  cluster_version = "1.31"
 
   iam_role_use_name_prefix = false
   iam_role_path = "/eks/"
@@ -28,7 +28,7 @@ module "eks" {
     resources        = ["secrets"]
   }]
 
-  vpc_id = data.terraform_remote_state.network.outputs.dev-nashtech-devops-vpc.id
+  vpc_id = data.terraform_remote_state.network.outputs.dev-sd5046-aws-infrastructure-vpc.id
   subnet_ids = [
     data.terraform_remote_state.network.outputs.dev-private-subnet-0.id,
     data.terraform_remote_state.network.outputs.dev-private-subnet-1.id,
@@ -80,21 +80,29 @@ module "eks" {
   self_managed_node_groups = {
     one = {
       name         = "mixed-1"
-      max_size     = 1              # ← Reduced from 3
-      desired_size = 1              # ← Reduced from 3
+      max_size     = 3              # Maximum 3 nodes allowed
+      desired_size = 1             # Start with 1 nodes running
 
       use_mixed_instances_policy = true
       bootstrap_extra_args       = "--kubelet-extra-args '--node-labels=mine/group=default'"
       mixed_instances_policy = {
         instances_distribution = {
-          on_demand_base_capacity                  = 0   # ← 100% spot
-          on_demand_percentage_above_base_capacity = 0   # ← 100% spot
+          on_demand_base_capacity                  = 1   # ← 1 on-demand guaranteed
+          on_demand_percentage_above_base_capacity = 10   # ← Rest is spot
           spot_allocation_strategy                 = "capacity-optimized"
         }
 
         override = [
           {
-            instance_type     = "t3a.micro"    # ← Only smallest instance
+            instance_type     = "t3a.micro"
+            weighted_capacity = "1"
+          },
+          {
+            instance_type     = "t3a.small"
+            weighted_capacity = "1"
+          },
+          {
+            instance_type     = "t3a.medium"
             weighted_capacity = "1"
           },
         ]
@@ -116,12 +124,12 @@ module "eks" {
 
   # aws_auth_users = [
   #   {
-  #     userarn  = data.terraform_remote_state.bootstrap.devops_user_arn.testing-user-1-nashtech-devops
+  #     userarn  = data.terraform_remote_state.bootstrap.devops_user_arn.testing-user-1-sd5046-aws-infrastructure
   #     username = "user1"
   #     groups   = ["system:masters"]
   #   },
   #   {
-  #     userarn  = data.terraform_remote_state.bootstrap.devops_user_arn.testing-user-2-nashtech-devops
+  #     userarn  = data.terraform_remote_state.bootstrap.devops_user_arn.testing-user-2-sd5046-aws-infrastructure
   #     username = "user2"
   #     groups   = ["system:masters"]
   #   },

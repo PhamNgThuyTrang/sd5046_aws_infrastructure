@@ -591,7 +591,7 @@ cd ../bootstrap && terraform destroy
 
 ### State Management
 
-- Terraform state is stored in S3: `terraform-boostrap-nashtech-devops-0002`
+- Terraform state is stored in S3: `terraform-boostrap-sd5046-aws-infrastructure-0002`
 - State is encrypted with KMS
 - State locking uses DynamoDB to prevent conflicts
 - **Never manually edit state files**

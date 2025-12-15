@@ -78,7 +78,7 @@ Networking:
   - Security Group: bastion-host (SSH port 22)
 
 IAM:
-  - Role: bastion-nashtech-devops
+  - Role: bastion-sd5046-aws-infrastructure
   - Profile: bastion-host-1-profile
   - Permissions: S3 access to bootstrap bucket
 
@@ -103,7 +103,7 @@ Networking:
   - Security Group: bastion-host
 
 IAM:
-  - Role: bastion-nashtech-devops-0002
+  - Role: bastion-sd5046-aws-infrastructure-0002
   - Profile: bastion-host-2-profile
 
 SSH Key:
@@ -325,7 +325,7 @@ module "bastion-host" {
 ```hcl
 bastion_host_1 = {
   name = "bastion-host"
-  ami  = "ami-0b13630a979679b27"  # Ubuntu 22.04
+  ami  = "ami-0030e4319cbf4dbf2"  # Ubuntu 22.04
   instance-type = "t3a.micro"
   
   instance-count = 2  # Creates 2 instances
@@ -355,7 +355,7 @@ bastion_host_1 = {
 - Similar to config 1
 - Different subnet (public-subnet-1)
 - Has 2 additional EBS volumes (20 GB each)
-- Different IAM role (bastion-nashtech-devops-0002)
+- Different IAM role (bastion-sd5046-aws-infrastructure-0002)
 
 ### 3. `provider.tf` - Terraform Configuration
 
@@ -440,7 +440,7 @@ sudo apt update
 sudo apt install -y vim htop
 
 # Test AWS CLI (should work with IAM role)
-aws s3 ls s3://terraform-boostrap-nashtech-devops-0002/
+aws s3 ls s3://terraform-boostrap-sd5046-aws-infrastructure-0002/
 ```
 
 ### SSH to Private Resources via Bastion
@@ -532,10 +532,10 @@ ssh -i bastion-host.pem ubuntu@<bastion-ip>
 # Check IAM role
 curl http://169.254.169.254/latest/meta-data/iam/security-credentials/
 
-# Should show: bastion-nashtech-devops
+# Should show: bastion-sd5046-aws-infrastructure
 
 # Test S3 access
-aws s3 ls s3://terraform-boostrap-nashtech-devops-0002/
+aws s3 ls s3://terraform-boostrap-sd5046-aws-infrastructure-0002/
 ```
 
 ### Verify Security Group

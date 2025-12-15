@@ -47,7 +47,8 @@ data "aws_iam_policy_document" "kms_use" {
 }
 
 resource "aws_s3_bucket" "bootstrap" {
-  bucket = "terraform-${var.name}-${var.project}-0002"
+  bucket        = "terraform-${var.name}-${var.project}-0002"
+  force_destroy = true
 
   tags = module.labels.tags
 

@@ -42,7 +42,7 @@ The **bootstrap** folder is the **first and most critical** step in deploying yo
 
 ### 1. S3 Bucket (State Storage)
 ```
-Name: terraform-boostrap-nashtech-devops-0002
+Name: terraform-boostrap-sd5046-aws-infrastructure-0002
 Purpose: Stores Terraform state files
 Features:
   - Versioning enabled (can recover old versions)
@@ -57,7 +57,7 @@ Features:
 
 ### 2. DynamoDB Table (State Locking)
 ```
-Name: terraform-boostrap-nashtech-devops
+Name: terraform-boostrap-sd5046-aws-infrastructure
 Purpose: Prevents simultaneous Terraform runs
 Hash Key: LockID
 ```
@@ -71,7 +71,7 @@ Hash Key: LockID
 
 **a) Bootstrap KMS Key**
 ```
-Name: terraform-boostrap-nashtech-devops-0002
+Name: terraform-boostrap-sd5046-aws-infrastructure-0002
 Purpose: Encrypts S3 bucket and DynamoDB table
 ```
 
@@ -90,8 +90,8 @@ Purpose: Encrypts Kubernetes secrets
 
 **Bastion Host Roles**
 ```
-Role 1: bastion-nashtech-devops
-Role 2: bastion-nashtech-devops-0002
+Role 1: bastion-sd5046-aws-infrastructure
+Role 2: bastion-sd5046-aws-infrastructure-0002
 Purpose: Allow EC2 instances to access S3 without storing credentials
 ```
 
@@ -211,7 +211,7 @@ Apply complete! Resources: 10 added, 0 changed, 0 destroyed.
 Outputs:
 kms_eks_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 kms_bootstrap_id = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
-bastion_role_arn = "arn:aws:iam::377414509754:role/bastion-nashtech-devops"
+bastion_role_arn = "arn:aws:iam::377414509754:role/bastion-sd5046-aws-infrastructure"
 ```
 
 ⏱️ **Time**: ~2-3 minutes
@@ -244,7 +244,7 @@ Backend configuration updated!
 #### **Step 6: Verify State Migration**
 ```powershell
 # List files in S3 bucket
-aws s3 ls s3://terraform-boostrap-nashtech-devops-0002/
+aws s3 ls s3://terraform-boostrap-sd5046-aws-infrastructure-0002/
 
 # Should show: terraform.tfstate
 ```
@@ -344,7 +344,7 @@ terraform show
 aws s3 ls | findstr terraform
 
 # Check bucket contents
-aws s3 ls s3://terraform-boostrap-nashtech-devops-0002/
+aws s3 ls s3://terraform-boostrap-sd5046-aws-infrastructure-0002/
 ```
 
 #### 3. Check DynamoDB Table
@@ -375,7 +375,7 @@ terraform output
 
 **Expected output:**
 ```
-bastion_role_arn = "arn:aws:iam::377414509754:role/bastion-nashtech-devops"
+bastion_role_arn = "arn:aws:iam::377414509754:role/bastion-sd5046-aws-infrastructure"
 kms_bootstrap_alias_arn = "arn:aws:kms:ap-southeast-1:377414509754:alias/terraform-..."
 kms_eks_alias_arn = "arn:aws:kms:ap-southeast-1:377414509754:alias/eks-test"
 ```
@@ -383,16 +383,16 @@ kms_eks_alias_arn = "arn:aws:kms:ap-southeast-1:377414509754:alias/eks-test"
 ### Check in AWS Console
 
 1. **S3 Console**: https://s3.console.aws.amazon.com/
-   - Look for bucket: `terraform-boostrap-nashtech-devops-0002`
+   - Look for bucket: `terraform-boostrap-sd5046-aws-infrastructure-0002`
 
 2. **DynamoDB Console**: https://console.aws.amazon.com/dynamodb/
-   - Look for table: `terraform-boostrap-nashtech-devops`
+   - Look for table: `terraform-boostrap-sd5046-aws-infrastructure`
 
 3. **KMS Console**: https://console.aws.amazon.com/kms/
    - Look for aliases: `terraform-*` and `eks-test`
 
 4. **IAM Console**: https://console.aws.amazon.com/iam/
-   - Look for roles: `bastion-nashtech-devops`
+   - Look for roles: `bastion-sd5046-aws-infrastructure`
 
 ---
 

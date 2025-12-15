@@ -57,7 +57,7 @@ The **networks** folder creates your **Virtual Private Cloud (VPC)** - an isolat
 
 #### 1. VPC
 ```
-Name: nashtech-devops-network-dev
+Name: sd5046-aws-infrastructure-network-dev
 CIDR: 10.0.0.0/16
 Total IPs: 65,536 addresses
 ```
@@ -285,7 +285,7 @@ Type `yes` when prompted.
 Apply complete! Resources: 25 added, 0 changed, 0 destroyed.
 
 Outputs:
-dev-nashtech-devops-vpc = { id = "vpc-xxxxx", cidr_block = "10.0.0.0/16" }
+dev-sd5046-aws-infrastructure-vpc = { id = "vpc-xxxxx", cidr_block = "10.0.0.0/16" }
 dev-public-subnet-0 = { id = "subnet-xxxxx", cidr_block = "10.0.0.0/20" }
 dev-private-subnet-0 = { id = "subnet-yyyyy", cidr_block = "10.0.48.0/20" }
 ```
@@ -522,7 +522,7 @@ terraform output
 
 **Expected output:**
 ```
-dev-nashtech-devops-vpc = {
+dev-sd5046-aws-infrastructure-vpc = {
   "arn" = "arn:aws:ec2:ap-southeast-1:377414509754:vpc/vpc-xxxxx"
   "cidr_block" = "10.0.0.0/16"
   "id" = "vpc-xxxxx"
@@ -546,7 +546,7 @@ security-groups = {
 **URL**: https://console.aws.amazon.com/vpc/
 
 **Check:**
-- VPCs: Should see `nashtech-devops-network-dev`
+- VPCs: Should see `sd5046-aws-infrastructure-network-dev`
 - Subnets: Should see 6 subnets (3 public, 3 private)
 - Internet Gateways: 1 attached to VPC
 - NAT Gateways: 1 in public subnet
@@ -556,7 +556,7 @@ security-groups = {
 
 **List VPCs:**
 ```powershell
-aws ec2 describe-vpcs --filters "Name=tag:Project,Values=nashtech-devops"
+aws ec2 describe-vpcs --filters "Name=tag:Project,Values=sd5046-aws-infrastructure"
 ```
 
 **List Subnets:**

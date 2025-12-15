@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "bastion-role-policy" {
     ]
 
     resources = [
-      "arn:aws:s3:::terraform-boostrap-nashtech-devops"
+      "arn:aws:s3:::terraform-boostrap-sd5046-aws-infrastructure"
     ]
   }
 }

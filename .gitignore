@@ -1,0 +1,7 @@
+terraform/ec2/bastion-host.pub
+terraform/ec2/bastion-host.pem
+terraform/bootstrap/.terraform
+terraform/networks/.terraform
+terraform/eks/.terraform
+terraform/ec2/.terraform
+terraform/ecr/.terraform

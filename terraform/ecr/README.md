@@ -62,7 +62,7 @@ The **ecr** folder creates **Amazon ECR (Elastic Container Registry)** - a Docke
 ### ECR Repository
 
 ```
-Repository Name: nashtech-devops-ecr-mgmt
+Repository Name: sd5046-aws-infrastructure-ecr-mgmt
 Environment: Management (mgmt)
 Region: ap-southeast-1
 Registry URL: 377414509754.dkr.ecr.ap-southeast-1.amazonaws.com
@@ -179,7 +179,7 @@ Type `yes` when prompted.
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 
 Outputs:
-repository_url = "377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/nashtech-devops-ecr-mgmt"
+repository_url = "377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/sd5046-aws-infrastructure-ecr-mgmt"
 ```
 
 ---
@@ -194,7 +194,7 @@ module "ecr" {
   source = "../modules/ecr"
   
   name        = "ecr"
-  project     = "nashtech-devops"
+  project     = "sd5046-aws-infrastructure"
   environment = "mgmt"
   owner       = "datton94"
 }
@@ -276,7 +276,7 @@ docker build -t my-app:latest .
 
 ```powershell
 # Replace with your repository URL
-$ECR_REPO = "377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/nashtech-devops-ecr-mgmt"
+$ECR_REPO = "377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/sd5046-aws-infrastructure-ecr-mgmt"
 
 docker tag my-app:latest ${ECR_REPO}:latest
 docker tag my-app:latest ${ECR_REPO}:v1.0.0
@@ -291,7 +291,7 @@ docker push ${ECR_REPO}:v1.0.0
 
 **Expected output:**
 ```
-The push refers to repository [377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/nashtech-devops-ecr-mgmt]
+The push refers to repository [377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/sd5046-aws-infrastructure-ecr-mgmt]
 latest: digest: sha256:abc123... size: 1234
 ```
 
@@ -334,7 +334,7 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: 377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/nashtech-devops-ecr-mgmt:latest
+        image: 377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/sd5046-aws-infrastructure-ecr-mgmt:latest
         ports:
         - containerPort: 3000
 ```
@@ -357,7 +357,7 @@ terraform output
 
 **Expected output:**
 ```
-repository_url = "377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/nashtech-devops-ecr-mgmt"
+repository_url = "377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/sd5046-aws-infrastructure-ecr-mgmt"
 ```
 
 ### Verify in AWS Console
@@ -365,7 +365,7 @@ repository_url = "377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/nashtech-dev
 **ECR Console**: https://console.aws.amazon.com/ecr/
 
 **Check:**
-1. Repository exists: `nashtech-devops-ecr-mgmt`
+1. Repository exists: `sd5046-aws-infrastructure-ecr-mgmt`
 2. Region: ap-southeast-1
 3. Encryption: Enabled
 
@@ -379,14 +379,14 @@ aws ecr describe-repositories --region ap-southeast-1
 **List images in repository:**
 ```powershell
 aws ecr list-images `
-  --repository-name nashtech-devops-ecr-mgmt `
+  --repository-name sd5046-aws-infrastructure-ecr-mgmt `
   --region ap-southeast-1
 ```
 
 **Get image details:**
 ```powershell
 aws ecr describe-images `
-  --repository-name nashtech-devops-ecr-mgmt `
+  --repository-name sd5046-aws-infrastructure-ecr-mgmt `
   --region ap-southeast-1
 ```
 
@@ -400,10 +400,10 @@ aws ecr get-login-password --region ap-southeast-1 | `
   377414509754.dkr.ecr.ap-southeast-1.amazonaws.com
 
 # List local images
-docker images | Select-String nashtech-devops
+docker images | Select-String sd5046-aws-infrastructure
 
 # Pull image (if you pushed one)
-docker pull 377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/nashtech-devops-ecr-mgmt:latest
+docker pull 377414509754.dkr.ecr.ap-southeast-1.amazonaws.com/sd5046-aws-infrastructure-ecr-mgmt:latest
 ```
 
 ---
@@ -478,7 +478,7 @@ aws iam list-attached-role-policies --role-name <eks-node-role-name>
 ```powershell
 # Check image exists
 aws ecr describe-images `
-  --repository-name nashtech-devops-ecr-mgmt `
+  --repository-name sd5046-aws-infrastructure-ecr-mgmt `
   --region ap-southeast-1
 
 # Check pod events
@@ -563,7 +563,7 @@ docker tag app:v1.0.0 ${ECR_REPO}:prod
 **Apply via CLI:**
 ```powershell
 aws ecr put-lifecycle-policy `
-  --repository-name nashtech-devops-ecr-mgmt `
+  --repository-name sd5046-aws-infrastructure-ecr-mgmt `
   --lifecycle-policy-text file://policy.json
 ```
 
@@ -573,14 +573,14 @@ aws ecr put-lifecycle-policy `
 
 ```powershell
 aws ecr put-image-scanning-configuration `
-  --repository-name nashtech-devops-ecr-mgmt `
+  --repository-name sd5046-aws-infrastructure-ecr-mgmt `
   --image-scanning-configuration scanOnPush=true
 ```
 
 **View scan results:**
 ```powershell
 aws ecr describe-image-scan-findings `
-  --repository-name nashtech-devops-ecr-mgmt `
+  --repository-name sd5046-aws-infrastructure-ecr-mgmt `
   --image-id imageTag=latest
 ```
 
@@ -645,12 +645,12 @@ aws ecr put-replication-configuration `
 
 ```powershell
 # List images
-aws ecr list-images --repository-name nashtech-devops-ecr-mgmt
+aws ecr list-images --repository-name sd5046-aws-infrastructure-ecr-mgmt
 
 # Delete all images
 aws ecr batch-delete-image `
-  --repository-name nashtech-devops-ecr-mgmt `
-  --image-ids "$(aws ecr list-images --repository-name nashtech-devops-ecr-mgmt --query 'imageIds[*]' --output json)"
+  --repository-name sd5046-aws-infrastructure-ecr-mgmt `
+  --image-ids "$(aws ecr list-images --repository-name sd5046-aws-infrastructure-ecr-mgmt --query 'imageIds[*]' --output json)"
 
 # Then destroy
 terraform destroy
@@ -708,7 +708,7 @@ terraform destroy
 
 ```
 ECR Registry (377414509754.dkr.ecr.ap-southeast-1.amazonaws.com)
-  ├── Repository: nashtech-devops-ecr-mgmt
+  ├── Repository: sd5046-aws-infrastructure-ecr-mgmt
   │   ├── Image: v1.0.0
   │   ├── Image: v1.0.1
   │   └── Image: latest

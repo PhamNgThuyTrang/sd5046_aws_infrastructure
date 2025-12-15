@@ -1,4 +1,4 @@
-output "dev-nashtech-devops-vpc" {
+output "dev-sd5046-aws-infrastructure-vpc" {
   value = module.network_dev.vpc
 }
 

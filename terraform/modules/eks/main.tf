@@ -351,8 +351,6 @@ resource "aws_eks_addon" "this" {
   service_account_role_arn = lookup(each.value, "service_account_role_arn", null)
 
   depends_on = [
-    module.fargate_profile,
-    module.eks_managed_node_group,
     module.self_managed_node_group,
   ]
 
@@ -391,7 +389,6 @@ locals {
   node_iam_role_arns_non_windows = distinct(
     compact(
       concat(
-        [for group in module.eks_managed_node_group : group.iam_role_arn],
         [for group in module.self_managed_node_group : group.iam_role_arn if group.platform != "windows"],
         var.aws_auth_node_iam_role_arns_non_windows,
       )
@@ -410,7 +407,6 @@ locals {
   fargate_profile_pod_execution_role_arns = distinct(
     compact(
       concat(
-        [for group in module.fargate_profile : group.fargate_profile_pod_execution_role_arn],
         var.aws_auth_fargate_profile_pod_execution_role_arns,
       )
     )
