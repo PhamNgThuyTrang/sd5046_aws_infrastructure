@@ -5,7 +5,7 @@ locals {
         name = "bastion-host"                     # Display name for EC2 instance (used in AWS console tags)
         ami  = "ami-0030e4319cbf4dbf2"            # Ubuntu AMI ID for us-east-1 region (must be region-specific)
         ami-owner = "099720109477"                # Canonical's AWS account ID (official Ubuntu publisher)
-        instance-type = "t3a.nano"                # EC2 size: 2 vCPU, 0.5GB RAM (~$3.50/month on-demand)
+        instance-type = "t3.medium"                # EC2 size: 2 vCPU, 4GB RAM
         root-volume-size = 10                     # Boot disk size in GB (OS storage)
         vpc-id = data.terraform_remote_state.network.outputs.dev-sd5046-aws-infrastructure-vpc.id  # VPC to launch instance in
         security-group-ids = data.terraform_remote_state.network.outputs.security-groups.bastion-host  # Firewall rules (SSH access)
@@ -28,7 +28,7 @@ locals {
         name = "bastion-host-2"                   # Display name for second bastion
         ami  = "ami-0030e4319cbf4dbf2"            # Same Ubuntu AMI as bastion_host_1
         ami-owner = "099720109477"                # Canonical (Ubuntu publisher)
-        instance-type = "t3a.nano"                # Same instance size as primary bastion
+        instance-type = "t3.small"                # Smaller instance size than primary bastion
         root-volume-size = 10                     # Boot disk size
         vpc-id = data.terraform_remote_state.network.outputs.dev-sd5046-aws-infrastructure-vpc.id  # Same VPC
         security-group-ids = data.terraform_remote_state.network.outputs.security-groups.bastion-host  # Same security group

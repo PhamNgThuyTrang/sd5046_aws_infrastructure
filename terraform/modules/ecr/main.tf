@@ -2,8 +2,6 @@ module "ecr_tags" {
   source = "../tags"
 
   name        = var.name
-  project     = var.project
-  environment = var.environment
   owner       = var.owner
 
   tags = {
@@ -12,11 +10,12 @@ module "ecr_tags" {
 }
 
 resource "aws_ecr_repository" "default" {
-  name                 = "${var.name}-${var.project}"
+  name                 = var.name
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
     scan_on_push = var.enable_scan_on_push
   }
 
+  tags = module.ecr_tags.tags
 }
