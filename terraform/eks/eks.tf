@@ -36,23 +36,27 @@ module "eks" {
   ]
 
 
-  node_security_group_additional_rules = {
-    ingress_self_all = {
-      description = "Node to node all ports/protocols"
-      protocol    = "-1"
-      from_port   = 0
-      to_port     = 0
-      type        = "ingress"
-      self        = true
+  # Additional rules for cluster security group (control plane)
+  cluster_security_group_additional_rules = {
+    ingress_bastion_to_cluster_api = {
+      description              = "Allow bastion host to access EKS cluster API endpoint for kubectl operations"
+      protocol                 = "tcp"
+      from_port                = 443
+      to_port                  = 443
+      type                     = "ingress"
+      source_security_group_id = data.terraform_remote_state.network.outputs.security-groups.bastion-host
     }
+  }
 
-    ingress_allow_access_from_control_plane = {
-      type                          = "ingress"
-      protocol                      = "tcp"
-      from_port                     = 9443
-      to_port                       = 9443
-      source_cluster_security_group = true
-      description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
+  # Additional rules for node security group (worker nodes)
+  node_security_group_additional_rules = {
+    ingress_bastion_to_nodes = {
+      description              = "Allow bastion host to communicate with EKS worker nodes for extended kubectl operations"
+      protocol                 = "tcp"
+      from_port                = 443
+      to_port                  = 443
+      type                     = "ingress"
+      source_security_group_id = data.terraform_remote_state.network.outputs.security-groups.bastion-host
     }
 
     egress_all = {
