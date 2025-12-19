@@ -59,6 +59,24 @@ module "eks" {
       source_security_group_id = data.terraform_remote_state.network.outputs.security-groups.bastion-host
     }
 
+    ingress_self_all = {
+      description = "Node to node all ports/protocols"
+      protocol    = "-1"
+      from_port   = 0
+      to_port     = 0
+      type        = "ingress"
+      self        = true
+    }
+
+    ingress_allow_access_from_control_plane = {
+      type                          = "ingress"
+      protocol                      = "tcp"
+      from_port                     = 9443
+      to_port                       = 9443
+      source_cluster_security_group = true
+      description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
+    }
+
     egress_all = {
       description      = "Node all egress"
       protocol         = "-1"
@@ -72,20 +90,19 @@ module "eks" {
 
   # Self Managed Node Group(s)
   self_managed_node_group_defaults = {
-    instance_type                          = "t3a.micro"
+    instance_type                          = "t3a.large" # Use only t3a.large for higher pod density
     update_launch_template_default_version = true
     iam_role_additional_policies = [
       "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
     ]
     key_name = aws_key_pair.eks.key_name
-
   }
 
   self_managed_node_groups = {
     one = {
       name         = "mixed-1"
-      max_size     = 3              # Maximum 3 nodes allowed
-      desired_size = 1             # Start with 1 nodes running
+      max_size     = 3
+      desired_size = 3
 
       use_mixed_instances_policy = true
       bootstrap_extra_args       = "--kubelet-extra-args '--node-labels=mine/group=default'"
@@ -98,15 +115,7 @@ module "eks" {
 
         override = [
           {
-            instance_type     = "t3a.micro"
-            weighted_capacity = "1"
-          },
-          {
-            instance_type     = "t3a.small"
-            weighted_capacity = "1"
-          },
-          {
-            instance_type     = "t3a.medium"
+            instance_type     = "t3a.large"
             weighted_capacity = "1"
           },
         ]
@@ -144,4 +153,43 @@ module "eks" {
   ]
 
   tags = module.tags_dev.tags
+}
+
+
+# RBAC for bastion role to allow deployments.apps list/get/watch
+resource "kubernetes_cluster_role" "bastion_deployments_read" {
+  metadata {
+    name = "bastion-deployments-read"
+  }
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["pods"]
+    verbs      = ["get", "list", "watch"]
+  }
+  rule {
+    api_groups = [""]
+    resources  = ["services"]
+    verbs      = ["get", "list", "watch"]
+  }
+}
+
+resource "kubernetes_cluster_role_binding" "bastion_deployments_read_binding" {
+  metadata {
+    name = "bastion-deployments-read-binding"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = kubernetes_cluster_role.bastion_deployments_read.metadata[0].name
+  }
+  subject {
+    kind      = "User"
+    name      = "arn:aws:iam::019394553470:role/bastion-sd5046-aws-infrastructure"
+    api_group = "rbac.authorization.k8s.io"
+  }
 }
